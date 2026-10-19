@@ -1,6 +1,6 @@
 # Testing
 
-Run `pytest` (130 tests) and `gt86-remote-start simulate` (20 scenarios). Everything runs on Windows or Linux
+Run `pytest` (137 tests) and `gt86-remote-start simulate` (20 scenarios). Everything runs on Windows or Linux
 in deterministic virtual time; the whole suite takes about 1.5 s.
 
 **These results show the software model behaves as specified. They do not validate hardware or vehicle safety.**
@@ -19,6 +19,7 @@ in deterministic virtual time; the whole suite takes about 1.5 s.
 | `test_safety_core.py` | Firmware model: safe power-on defaults; refusals without reservation or heartbeat; nonce replay; unknown input; latch survives power cycle |
 | `test_timeouts.py` | Runtime limit; crank bounded by the controller; reservation lock press cannot count toward a start; reservation timeout; unconfirmed stop latches |
 | `test_watchdog.py` | Controller stops on heartbeat loss; hardware watchdog drops outputs; Pi boot never starts; Pi restart mid-run stops the engine; init timeout; lockout needs both service actions |
+| `test_console.py` | Console: every action confirms; status/log don't move time; normal start; injected faults shown until cleared; reset; bad input explained |
 | `test_main.py` | CLI: config check, bad config, vehicle mode locked out, simulate |
 | `test_fault_injection.py` | Runs every scenario below |
 

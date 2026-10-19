@@ -10,18 +10,21 @@ No factory wire colours, connector pin numbers, CAN identifiers or ECU signal
 names are given anywhere in this project, because none have been verified for
 this exact vehicle.
 
-## 1. Identify the exact vehicle first
+## 1. The exact vehicle
 
-| Question | Status |
-|---|---|
-| Market. "2012 Toyota GT86 / Scion FR-S" covers two different cars: in North America the FR-S was sold as **model year 2013** (from mid-2012). A car registered in 2012 as a *GT86* is a European, UK, Australian or Japanese market car. | [UNRESOLVED]: read the VIN plate and registration document. |
-| Builder. The ZN6 platform (GT86 / FR-S / BRZ) was built by Subaru, so the VIN should begin with Subaru's world manufacturer code. | [UNRESOLVED]: confirm on the car. |
-| Key type: mechanical key with transponder (no Smart Entry / push start). Some markets and trims had Smart Entry with push start, which is a different system. | Brief says mechanical key; [UNRESOLVED] which remote/key form the car has. |
-| Factory alarm fitted (EU cars often have one, with a hood switch). | [UNRESOLVED] |
+The owner's VIN (kept out of this repository) decodes as follows. The check digit is valid.
 
-Wiring and data interfaces must be taken from the service manual and installation
-guides **for that exact market and build date**. North American FR-S and
-European GT86 wiring must not be assumed identical.
+| Item | Finding | Status |
+|---|---|---|
+| Builder | `JF1`: Subaru (Fuji Heavy Industries), Japan | [VERIFIED]: standard world manufacturer code |
+| Model | `ZNAA1`: **Scion FR-S, North American market** (ZN6 platform) | [VERIFIED]: matches decoded FR-S VINs |
+| Model year | 10th character `E` = **2014** (not 2012) | [VERIFIED]: ISO 3779 year code |
+| Transmission | Not reliably encoded. Decoders label `ZNAA1` as 6AT even for cars sold as manual | Owner states **6-speed manual** |
+| Key type | Mechanical key with transponder (no Smart Entry / push start) | Owner states key; [UNRESOLVED] the remote/key form |
+| Factory alarm / hood switch | | [UNRESOLVED] |
+
+**Consequence:** use the North American FR-S service manual and installation guides for **model
+year 2014**. European GT86 documents do not apply, and 2013 documents must be checked against 2014.
 
 ## 2. Key fob and lock-command detection
 
@@ -68,7 +71,7 @@ We do **not** decode or replay the fob's radio signal, and never will.
 - **Compatible way to keep it [PROPOSED]:** a commercial immobilizer *data
   interface*. Fortin's materials point 2013 Toyota/Scion **regular-key** cars to the
   **EVO-ONE** (remote starter and bypass module in one) with the **TOY3**
-  T-harness [VERIFIED as Fortin's product guidance; fitment to the exact car UNRESOLVED].
+  T-harness [VERIFIED as Fortin's product guidance; fitment to a 2014 manual FR-S UNRESOLVED, see B3].
   The module is programmed to the car by its own documented procedure. It grants
   authorisation only during its remote-start mode, and normal key starting stays as
   from the factory. The factory immobilizer is never removed or permanently disabled.
@@ -131,9 +134,13 @@ We do **not** decode or replay the fob's radio signal, and never will.
 - **B1. Fob-specific lock signal.** Get the service-manual keyless-entry circuit
   for the exact variant. Bench-probe methods A and C with an isolated logic
   analyser.
-- **B2. Exact market and build.** VIN, registration, and the service manual for that build.
-- **B3. Immobilizer interface.** Confirm with Fortin support (or a European equivalent)
-  that the module supports this exact car with a manual gearbox. Their installation guide for the car is needed.
+- **B2. Exact market and build.** Mostly resolved: VIN = 2014 North American Scion FR-S. Still needed:
+  confirm the manual gearbox and the key form on the car, and get the 2014 FR-S service manual.
+- **B3. Immobilizer interface.** No source confirms that the EVO-ONE supports a **2014** FR-S with a
+  **regular key and a manual gearbox**. The TOY3 listing says "2013+ Toyota/Scion regular key" without
+  mentioning manuals, and Fortin's FR-S manual-transmission guidance found so far is for push-to-start cars.
+  Confirm with Fortin technical support (1-877-336-7797) on their compatibility page for the exact car,
+  and get their installation guide for it.
 - **B4. Neutral sensing.** Find out whether a factory neutral switch exists; design the added sensor.
 - **B5. Start interface.** High-current switching and clutch-interlock handling stay with
   the certified module. A self-built driver needs professional design and review.
@@ -146,6 +153,9 @@ We do **not** decode or replay the fob's radio signal, and never will.
 ## Sources
 
 - Fortin Q&A, EVO-ONE and FR-S issues: https://www.wirecolor.pp.fortin.ca/en/qa/66860/evo-one-and-frs-issues
+- Fortin Q&A, Scion manual transmission: https://fortin.ca/en/qa/Scion/tag/manual-transmission
+- 2013 FR-S VIN example (transmission "Standard"): https://www.hagerty.com/valuation-tools/past-sales/2013-scion-fr~s/JF1ZNAA1XD1726234/8c15ef11-7312-4fe1-abad-3f5cb2d80559
+- 2013 FR-S VIN decode (labelled 6AT): https://decodethis.com/web/vin/JF1ZNAA18D1710811
 - Fortin Q&A, FR-S OEM remote: https://image-7.wirecolor.com/qa/73394/frs-oem-remote
 - EVO-ONE TOY3 bundle, 2013 Toyota/Scion regular key: https://www.bestbuy.ca/en-ca/product/fortin-evo-one-toy3-remote-start-flashlink-updater-bundle-plug-and-play-t-harness-for-2013-toyota-scion-regular-key-all-in-one-security-programmer/19662246
 - Fortin EVO-ALL guide (automatic-only note): https://device.report/manual/17112446

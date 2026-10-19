@@ -2,7 +2,7 @@
 
 The factory immobilizer is never defeated, cloned or emulated by this
 project. A remote start can only be authorised by a dedicated, commercially
-supported immobilizer data interface (for the 2013 FR-S regular-key car,
+supported immobilizer data interface (for 2013+ FR-S regular-key cars,
 Fortin documents the EVO-ONE with the TOY3 T-harness; see
 docs/vehicle_research.md). Such a module is programmed by its own procedure
 and only grants authorisation while it is in its remote-start mode.

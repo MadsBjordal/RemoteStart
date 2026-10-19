@@ -1,6 +1,6 @@
 # GT86 / FR-S remote start (Raspberry Pi)
 
-A custom, offline remote-start system for a 2012 Toyota GT86 / Scion FR-S with a 6-speed manual gearbox:
+A custom, offline remote-start system for a 2014 Scion FR-S (North America; ZN6, the GT86 platform) with a 6-speed manual gearbox:
 **press the original fob's LOCK button three times within 3 s** to start, and three times again to stop.
 
 > **Status: Phases 1 and 2. Simulation only.** Live ignition and starter outputs are locked out in code
@@ -25,10 +25,10 @@ unresolved. The biggest open question is whether this car exposes a *fob-specifi
 ```bash
 python -m venv .venv && .venv/Scripts/activate      # Linux: source .venv/bin/activate
 pip install -e ".[dev]"
-pytest                                   # 130 tests
+pytest                                   # 137 tests
 gt86-remote-start simulate               # 20 safety scenarios
 gt86-remote-start simulate 1 -v          # one scenario with its event log
-gt86-remote-start console                # try it by hand: reserve, wait 4, lock, status
+gt86-remote-start console                # try it by hand: reserve, wait 4, lock, wait 5, status
 ```
 
 ## Layout

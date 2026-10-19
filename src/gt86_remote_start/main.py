@@ -49,84 +49,10 @@ def cmd_simulate(args: argparse.Namespace) -> int:
     return run_demo([*map(str, args.numbers), *(["-v"] if args.verbose else [])])
 
 
-CONSOLE_HELP = """commands:
-  reserve            drive in, park in neutral, do the reservation procedure, lock
-  lock [n]           press LOCK n times (default 3), 0.6 s apart
-  unlock             press UNLOCK
-  wait <seconds>     let time pass
-  door open|close    hood open|close    brake on|off    key on|off    gear N|1
-  battery <volts>    resting battery voltage
-  nostart            engine will not start      move <kph>   vehicle moves
-  crash              Pi crashes                  reboot       Pi restarts
-  status             state, engine, reservation  log          recent events
-  quit"""
-
-
 def cmd_console(_args: argparse.Namespace) -> int:
-    from simulator.fault_injection import FaultInjector
-    from simulator.harness import SimulationHarness
+    from simulator.console import run_console
 
-    from .fob_listener import FobCommand
-
-    h = SimulationHarness(echo=True)
-    f = FaultInjector(h)
-    h.boot()
-    print(CONSOLE_HELP)
-    w = h.world
-    while True:
-        try:
-            line = input("gt86> ").strip().split()
-        except EOFError:
-            return 0
-        if not line:
-            continue
-        cmd, *rest = line
-        arg = rest[0] if rest else ""
-        try:
-            if cmd == "quit":
-                return 0
-            elif cmd == "reserve":
-                h.perform_reservation()
-            elif cmd == "lock":
-                h.press_lock(int(arg or 3))
-            elif cmd == "unlock":
-                h.fob.press(FobCommand.UNLOCK)
-            elif cmd == "wait":
-                h.run(float(arg))
-            elif cmd == "door":
-                w.doors_closed = arg == "close"
-            elif cmd == "hood":
-                w.hood_closed = arg == "close"
-            elif cmd == "brake":
-                w.parking_brake = arg == "on"
-            elif cmd == "key":
-                w.key_on = arg == "on"
-            elif cmd == "gear":
-                w.gear = arg.upper() or "N"
-            elif cmd == "battery":
-                f.battery(float(arg))
-            elif cmd == "nostart":
-                f.engine_wont_start()
-            elif cmd == "move":
-                f.vehicle_moves(float(arg))
-            elif cmd == "crash":
-                f.crash_pi()
-            elif cmd == "reboot":
-                f.reboot_pi()
-            elif cmd == "status":
-                print(f"state={h.state.name} engine_running={w.engine.running} "
-                      f"rpm={w.engine.rpm:.0f} reservation={h.controller.core.reservation.name} "
-                      f"controller={h.controller.core.state.name}")
-                continue
-            elif cmd == "log":
-                print("\n".join(h.records()[-30:]))
-                continue
-            else:
-                print(CONSOLE_HELP)
-                continue
-            h.run(0.2)
-        except ValueError:
-            print("bad value;", CONSOLE_HELP)
+    return run_console()
 
 
 async def _service_loop(args: argparse.Namespace) -> int:

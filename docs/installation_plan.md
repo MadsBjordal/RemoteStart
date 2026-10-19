@@ -6,10 +6,10 @@
 python -m venv .venv
 # Windows: .venv\Scripts\activate      Linux: source .venv/bin/activate
 pip install -e ".[dev]"
-pytest                                   # 130 tests
+pytest                                   # 137 tests
 gt86-remote-start simulate               # 20 scenarios, summary
 gt86-remote-start simulate 1 16 -v       # chosen scenarios with full event log
-gt86-remote-start console                # drive the simulator by hand (type "reserve", "lock", "status")
+gt86-remote-start console                # drive the simulator by hand (type "reserve", "wait 4", "lock", "wait 5", "status"; "help" lists all)
 gt86-remote-start check-config --config config.yaml
 ```
 
