@@ -1,0 +1,32 @@
+# systemd unit for Raspberry Pi OS Lite. Install: see docs/installation_plan.md
+[Unit]
+Description=GT86 remote start application (Pi side)
+After=local-fs.target
+# No network dependency: the system works fully offline.
+
+[Service]
+Type=notify
+User=gt86rs
+Group=gt86rs
+SupplementaryGroups=dialout gpio
+WorkingDirectory=/var/lib/gt86-remote-start
+ExecStart=/opt/gt86-remote-start/venv/bin/gt86-remote-start run --config /etc/gt86-remote-start/config.yaml
+# The control loop pings the watchdog every tick; if it stops for 2 s systemd
+# kills and restarts the process. Restarting is safe: the application never
+# starts the engine on boot, and the safety controller has already stopped any
+# remote run after its own 1 s heartbeat timeout.
+WatchdogSec=2
+Restart=always
+RestartSec=2
+StartLimitIntervalSec=60
+StartLimitBurst=5
+# Hardening
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+ReadWritePaths=/var/lib/gt86-remote-start
+DeviceAllow=/dev/serial0 rw
+
+[Install]
+WantedBy=multi-user.target

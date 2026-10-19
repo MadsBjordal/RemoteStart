@@ -1,0 +1,66 @@
+# GT86 / FR-S remote start: application configuration.
+# All values are application proposals, NOT validated vehicle safety thresholds.
+# Real engine activation is disabled: hardware.live_vehicle_outputs_enabled is
+# locked out in code (config.LIVE_OUTPUTS_PERMITTED = False), and the safety.*
+# requirements cannot be switched off.
+
+remote_start:
+  enabled: false                      # true only for simulation runs
+  runtime_seconds: 600                # 10 minutes
+  maximum_runtime_seconds: 900        # hard cap the Pi will ever request
+  fob_press_count: 3
+  fob_press_window_seconds: 3.0
+  fob_min_press_interval_seconds: 0.25  # closer presses are debounced
+  fob_stale_event_seconds: 1.0
+  activation_cooldown_seconds: 10
+  automatic_restart_enabled: false    # cannot be enabled in this release
+
+safety:
+  require_reservation_mode: true
+  require_neutral_verification: true
+  require_parking_brake: true
+  require_hood_closed: true
+  require_doors_closed: true
+  require_independent_controller: true
+  latch_critical_faults: true
+  min_start_voltage: 12.0
+  max_voltage: 15.5
+  min_running_voltage: 12.5           # below this for low_voltage_hold_seconds = charging failed
+  low_voltage_hold_seconds: 5.0
+  max_status_age_seconds: 0.5
+  stationary_speed_kph: 0.5
+
+engine:
+  running_rpm_min: 500
+  stopped_rpm_max: 100
+  implausible_rpm: 9000
+  start_confirm_seconds: 1.0
+  signal_timeout_seconds: 1.0
+  contradiction_seconds: 1.0
+
+controller:
+  heartbeat_interval_seconds: 0.2
+  status_timeout_seconds: 1.0
+  init_timeout_seconds: 5.0
+  start_response_timeout_seconds: 1.0
+  start_validity_ms: 3000
+  authorized_timeout_seconds: 6.0
+  crank_confirm_timeout_seconds: 8.0
+  shutdown_timeout_seconds: 10.0
+  stop_resend_seconds: 0.5
+  fault_recovery_seconds: 5.0
+  serial_port: /dev/serial0
+  baud_rate: 115200
+
+hardware:
+  mode: simulation                    # simulation | bench | vehicle
+  live_vehicle_outputs_enabled: false
+
+logging:
+  directory: logs                     # on the Pi: /var/lib/gt86-remote-start/logs
+  flush_interval_seconds: 30
+  max_file_bytes: 1000000
+  backup_count: 5
+  echo_to_console: true
+
+tick_seconds: 0.05

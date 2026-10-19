@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gt86-remote-start"
+version = "0.1.0"
+description = "Raspberry Pi remote start for Toyota GT86 / Scion FR-S (simulation phase)"
+requires-python = ">=3.10"
+dependencies = ["PyYAML>=6.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+hardware = ["pyserial>=3.5"]
+
+[project.scripts]
+gt86-remote-start = "gt86_remote_start.main:cli"
+
+[tool.setuptools.packages.find]
+where = ["src", ".", "firmware/safety_controller"]
+include = ["gt86_remote_start*", "simulator*", "sc_model*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", ".", "firmware/safety_controller"]
+testpaths = ["tests"]
